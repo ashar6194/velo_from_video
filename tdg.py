@@ -69,14 +69,16 @@ class DataGenerator(keras.utils.Sequence):
           img = cv2.imread(id_name)[200:360, 150:500]
           img2 = cv2.imread(id_name2)[200:360, 150:500]
 
-          img = cv2.resize(img, (args.input_size1, args.input_size2))
-          img2 = cv2.resize(img2, (args.input_size1, args.input_size2))
+          img = cv2.resize(img, (args.input_size2, args.input_size1))
+          img2 = cv2.resize(img2, (args.input_size2, args.input_size1))
 
           rgb_flow = opticalFlowDense(img, img2)
           # print(np.min(rgb_flow), np.max(rgb_flow))
 
           dst = np.zeros(shape=(5, 2))
           rgb_flow = cv2.normalize(rgb_flow, dst, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
+          rgb_flow -= 0.5
+          rgb_flow *= 2
           # print(np.min(rgb_flow), np.max(rgb_flow))
           # cv2.imshow('flow_vis', rgb_flow)
           # cv2.waitKey(100)

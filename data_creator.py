@@ -73,6 +73,6 @@ def plot_train_speeds(file_name):
 if __name__ == '__main__':
     a = 1
     # plot_train_speeds(velocity_file)
-    display_cropped_imgs(train_img_folder, velocity_file)
+    display_cropped_imgs(test_img_folder, velocity_file)
     # extract_frames(train_vid, train_img_folder)
     # extract_frames(test_vid, test_img_folder)

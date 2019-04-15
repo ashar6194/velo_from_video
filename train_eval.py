@@ -6,11 +6,10 @@ import glob
 import numpy as np
 import datetime
 
-from keras import losses
 from io_args import args
-from model_set import build_model_basic, compile_network, build_ddp_vgg, build_minivgg_basic
+from model_set import build_model_basic, compile_network
 from tdg import DataGenerator
-from keras.models import load_model
+# from keras.models import load_model
 
 from utils import provide_shuffle_idx
 from keras.callbacks import TensorBoard, LearningRateScheduler, ModelCheckpoint
@@ -20,7 +19,7 @@ from multiprocessing import cpu_count
 def step_decay(epoch):
   initial_lrate = 0.001
   drop = 0.1
-  epochs_drop = 25.0
+  epochs_drop = 2.0
   num_epoch = epoch if epoch < 100 else 100
   lrate = initial_lrate * math.pow(drop, math.floor((1+num_epoch)/epochs_drop))
   return lrate
@@ -56,12 +55,12 @@ if __name__ == '__main__':
   compile_network(model)
 
   filepath = ckpt_dir + 'weights_%03d.h5' % args.num_epochs
-  checkpoint = checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1, save_best_only=True, mode='min')
+  checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1, save_best_only=True, mode='min')
   tensorboard = TensorBoard(log_dir=logs_dir, batch_size=args.batch_size)
   lrate = LearningRateScheduler(step_decay)
   callbacks_list = [checkpoint, tensorboard, lrate]
   model.fit_generator(generator=train_dg, epochs=args.num_epochs, verbose=1, validation_data=test_dg,
-                      use_multiprocessing=True, workers=cpu_count())
+                      use_multiprocessing=True, workers=cpu_count(), callbacks=callbacks_list)
 
-  model_name = ckpt_dir + 'ddp_%s_ep500_%s.h5' % (args.model_name, datetime.datetime.now().strftime("%m_%d"))
+  model_name = ckpt_dir + '%s_%s.h5' % (args.model_name, datetime.datetime.now().strftime("%m_%d"))
   model.save(model_name)

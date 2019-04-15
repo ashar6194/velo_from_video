@@ -30,19 +30,19 @@ def build_ddp_vgg(input_shape, num_classes=54):
 def build_model_basic(input_shape, num_classes=54):
   inp = Input(shape=input_shape)
 
-  x = conv_elu(inp, 24, (3, 3))
-  x = conv_elu(x, 24, (3, 3), strides=(2, 2), padding='valid')
+  x = conv_act(inp, 24, (3, 3))
+  x = conv_act(x, 24, (3, 3), strides=(2, 2), padding='valid')
 
-  x = conv_elu(x, 36, (3, 3))
-  x = conv_elu(x, 36, (3, 3), strides=(2, 2), padding='valid')
+  x = conv_act(x, 36, (3, 3))
+  x = conv_act(x, 36, (3, 3), strides=(2, 2), padding='valid')
 
-  x = conv_elu(x, 48, (3, 3))
-  x = conv_elu(x, 48, (3, 3), strides=(2, 2), padding='valid')
+  x = conv_act(x, 48, (3, 3))
+  x = conv_act(x, 48, (3, 3), strides=(2, 2), padding='valid')
 
   x = Dropout(rate=0.5)(x)
 
-  x = conv_elu(x, 64, (3, 3), strides=(1, 1), padding='valid')
-  x = conv_elu(x, 64, (3, 3), strides=(1, 1), padding='valid')
+  x = conv_act(x, 64, (3, 3), strides=(1, 1), padding='valid')
+  x = conv_act(x, 64, (3, 3), strides=(1, 1), padding='valid')
 
   x = Flatten()(x)
   x = Dense(100, kernel_initializer='glorot_uniform', activation='relu')(x)
@@ -53,31 +53,6 @@ def build_model_basic(input_shape, num_classes=54):
   model = Model(inputs=inp, outputs=x_out, name='Alexnet Model')
 
   return model
-
-
-def build_minivgg_basic(input_shape, num_classes=54):
-  inp = Input(shape=input_shape)
-
-  x = conv_act(inp, 64, (3, 3))
-  x = MaxPooling2D()(x)
-  x = conv_act(x, 128, (3, 3))
-  x = MaxPooling2D()(x)
-  x = conv_act(x, 256, (3, 3))
-  x = conv_act(x, 512, (3, 3))
-  x = MaxPooling2D()(x)
-  x = conv_act(x, 1024, (3, 3))
-  x = Flatten()(x)
-  x = Dense(1024, kernel_initializer='glorot_uniform', activation='relu')(x)
-  x = Dropout(rate=0.2)(x)
-  x = Dense(256, kernel_initializer='glorot_uniform', activation='relu')(x)
-  x_out = Dense(num_classes, kernel_initializer='glorot_uniform')(x)
-  model = Model(inputs=inp, outputs=x_out, name='Mini VGGnet Model')
-  return model
-
-
-def identity(layer):
-  print('Layer output:\n', layer)
-  return layer
 
 
 def direct_huber_loss(y_true, y_pred):
