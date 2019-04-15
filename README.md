@@ -18,7 +18,7 @@ Keras==2.2.4
 
 
 ### Results on Train+Val
-![](Results_plot.png)
+![alt text](Results_plot.png)
 
 ### A mini demo-
 
