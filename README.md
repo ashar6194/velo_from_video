@@ -17,6 +17,9 @@ Keras==2.2.4
 8. model_set.py -> Keras Model Definitions
 
 
-### A mini Demo-
+### Results on Train+Val
+![](Results_plot.png)
+
+### A mini demo-
 
 ![](demo.gif)
