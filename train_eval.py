@@ -7,7 +7,7 @@ import numpy as np
 import datetime
 
 from io_args import args
-from model_set import build_model_basic, compile_network
+from model_set import build_model_basic, compile_network, build_model_elu
 from tdg import DataGenerator
 # from keras.models import load_model
 
@@ -51,16 +51,16 @@ if __name__ == '__main__':
   train_dg = DataGenerator(train_list, batch_size=args.batch_size)
   test_dg = DataGenerator(test_list, batch_size=args.batch_size)
 
-  model = build_model_basic(inp_shape)
+  model = build_model_elu(inp_shape)
   compile_network(model)
 
   filepath = ckpt_dir + 'weights_%03d.h5' % args.num_epochs
   checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1, save_best_only=True, mode='min')
   tensorboard = TensorBoard(log_dir=logs_dir, batch_size=args.batch_size)
   lrate = LearningRateScheduler(step_decay)
-  callbacks_list = [checkpoint, tensorboard, lrate]
+  callbacks_list = [tensorboard]
   model.fit_generator(generator=train_dg, epochs=args.num_epochs, verbose=1, validation_data=test_dg,
                       use_multiprocessing=True, workers=cpu_count(), callbacks=callbacks_list)
 
-  model_name = ckpt_dir + '%s_%s.h5' % (args.model_name, datetime.datetime.now().strftime("%m_%d"))
+  model_name = ckpt_dir + '%s_ELU_%s.h5' % (args.model_name, datetime.datetime.now().strftime("%m_%d"))
   model.save(model_name)

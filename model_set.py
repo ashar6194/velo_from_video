@@ -6,6 +6,7 @@ from keras.activations import softmax
 from keras.applications.vgg16 import VGG16
 import pickle
 import keras
+from keras.layers import ELU
 
 from sklearn.metrics import confusion_matrix
 
@@ -48,6 +49,45 @@ def build_model_basic(input_shape, num_classes=54):
   x = Dense(100, kernel_initializer='glorot_uniform', activation='relu')(x)
   x = Dense(50, kernel_initializer='glorot_uniform', activation='relu')(x)
   x = Dense(10, kernel_initializer='glorot_uniform', activation='relu')(x)
+  x_out = Dense(1, kernel_initializer='glorot_uniform')(x)
+
+  model = Model(inputs=inp, outputs=x_out, name='Alexnet Model')
+
+  return model
+
+
+def build_model_elu(input_shape):
+  inp = Input(shape=input_shape)
+
+  x = conv(inp, 24, (3, 3))
+  x = ELU()(x)
+  x = conv(x, 24, (3, 3), strides=(2, 2), padding='valid')
+  x = ELU()(x)
+
+  x = conv(x, 36, (3, 3))
+  x = ELU()(x)
+  x = conv(x, 36, (3, 3), strides=(2, 2), padding='valid')
+  x = ELU()(x)
+
+  x = conv(x, 48, (3, 3))
+  x = ELU()(x)
+  x = conv(x, 48, (3, 3), strides=(2, 2), padding='valid')
+  x = ELU()(x)
+
+  x = Dropout(rate=0.5)(x)
+
+  x = conv(x, 64, (3, 3), strides=(1, 1), padding='valid')
+  x = ELU()(x)
+  x = conv(x, 64, (3, 3), strides=(1, 1), padding='valid')
+  x = ELU()(x)
+
+  x = Flatten()(x)
+  x = Dense(100, kernel_initializer='glorot_uniform', activation=None)(x)
+  x = ELU()(x)
+  x = Dense(50, kernel_initializer='glorot_uniform', activation=None)(x)
+  x = ELU()(x)
+  x = Dense(10, kernel_initializer='glorot_uniform', activation=None)(x)
+  x = ELU()(x)
   x_out = Dense(1, kernel_initializer='glorot_uniform')(x)
 
   model = Model(inputs=inp, outputs=x_out, name='Alexnet Model')
