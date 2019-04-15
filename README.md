@@ -1,5 +1,7 @@
 ## Building Model to estimate Velocity of Car from Front Cam Video
 
+A pair of subsequent frames is selected to obtain optical flow. This flow image is used to learn the velocity of the ego-car.
+
 ### Requirements-
 python 3.5.2
 Tensorflow-Gpu==1.7
