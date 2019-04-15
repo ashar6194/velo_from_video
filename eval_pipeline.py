@@ -19,7 +19,7 @@ def eval_results(args, directory):
 
   full_pred_list = np.array([])
   full_gt_list = gt_labels
-  mov_avg_idx = 5
+  mov_avg_idx = 3
 
   for idx, id_name in tqdm(enumerate(im_list)):
 
@@ -55,7 +55,7 @@ def eval_results(args, directory):
 
   # print (np.mean(error))
   # print (np.median(error))
-  pickle.dump(full_pred_list, open('test_results.pkl', 'wb'))
+  pickle.dump(full_pred_list, open('test_results_avg_3.pkl', 'wb'))
 
 
 
@@ -70,4 +70,4 @@ if __name__ == '__main__':
   model = build_model_elu(inp_shape)
   model.load_weights(model_name)
   # infer_outputs(args, ddp_model)
-  eval_results(args, train_img_folder)
+  eval_results(args, test_img_folder)

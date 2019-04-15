@@ -37,6 +37,4 @@ plt.figure(2)
 # plt.hold()
 plt.grid()
 plt.plot(test_set_predictions, c='b')
-
-
 plt.show()
