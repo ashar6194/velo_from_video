@@ -15,3 +15,8 @@ Keras==2.2.4
 6. eval_pipeline.py -> Store model's inferred output on train/test data into pickle files
 7. rough_plots.py -> Visualize model results and store results as text files 
 8. model_set.py -> Keras Model Definitions
+
+
+### A mini Demo-
+
+![](demo.gif)

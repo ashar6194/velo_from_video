@@ -32,7 +32,10 @@ def display_cropped_test(vid_folder, label_file_name):
         bbox = cv2.rectangle(img, (150, 250), (500, 360), (255, 0, 0), 2)
         cropped_img = bbox[200:360, 150:500]
         print(idx)
-        bbox = cv2.putText(bbox, 'Speed = %f' % vel[idx], (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0 ,0, 255), 2)
+        bbox = cv2.putText(bbox, 'Speed = %f mph' % vel[idx], (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0, 255), 2)
+
+        if idx < 5:
+            cv2.imwrite('frame_%07d.png' % idx, bbox)
 
         cv2.imshow('see_crop', bbox)
         cv2.imshow('sep_crop', cropped_img)
