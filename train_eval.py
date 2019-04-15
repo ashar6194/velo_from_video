@@ -38,9 +38,8 @@ if __name__ == '__main__':
 
   inp_shape = (args.input_size1, args.input_size2, 3)
 
-  vid_dir = '/home/ashar/Documents/comma_ai/speed_challenge_2017/data'
-  train_vid = os.path.join(vid_dir, 'train.mp4')
-  train_img_folder = os.path.join(vid_dir, 'train_images')
+  train_img_folder = os.path.join(args.data_root_dir, 'train_images')
+
   img_list = sorted(glob.glob('%s/*.png' % train_img_folder))
 
   train_idx = provide_shuffle_idx(len(img_list), ratio=0.75, data_mode='train')
