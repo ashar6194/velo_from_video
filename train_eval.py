@@ -1,16 +1,12 @@
-import keras
 import math
 import os
 import h5py
 import glob
-import numpy as np
 import datetime
 
 from io_args import args
 from model_set import build_model_basic, compile_network, build_model_elu
 from tdg import DataGenerator
-# from keras.models import load_model
-
 from utils import provide_shuffle_idx
 from keras.callbacks import TensorBoard, LearningRateScheduler, ModelCheckpoint
 from multiprocessing import cpu_count
@@ -37,7 +33,6 @@ if __name__ == '__main__':
     os.makedirs(logs_dir)
 
   inp_shape = (args.input_size1, args.input_size2, 3)
-
   train_img_folder = os.path.join(args.data_root_dir, 'train_images')
 
   img_list = sorted(glob.glob('%s/*.png' % train_img_folder))
@@ -57,7 +52,7 @@ if __name__ == '__main__':
   checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1, save_best_only=True, mode='min')
   tensorboard = TensorBoard(log_dir=logs_dir, batch_size=args.batch_size)
   lrate = LearningRateScheduler(step_decay)
-  callbacks_list = [tensorboard]
+  callbacks_list = [tensorboard]  # lrate
   model.fit_generator(generator=train_dg, epochs=args.num_epochs, verbose=1, validation_data=test_dg,
                       use_multiprocessing=True, workers=cpu_count(), callbacks=callbacks_list)
 

@@ -1,34 +1,12 @@
-from keras.models import Model, Sequential
+from keras.models import Model
 import tensorflow as tf
-import numpy as np
 from keras import optimizers
-from keras.activations import softmax
-from keras.applications.vgg16 import VGG16
-import pickle
-import keras
 from keras.layers import ELU
-
-from sklearn.metrics import confusion_matrix
 
 from layers import *
 
 
-def build_ddp_vgg(input_shape, num_classes=54):
-  model_vgg16_conv = VGG16(include_top=False)
-  inp = Input(shape=input_shape)
-  output_vgg16_conv = model_vgg16_conv(inp)
-  x = Flatten(name='flatten')(output_vgg16_conv)
-  x = Dense(1024, kernel_initializer='glorot_normal', activation='relu')(x)
-  x = Dropout(rate=0.2)(x)
-  x_out = Dense(256, kernel_initializer='glorot_normal', activation='relu')(x)
-  x_out = Dense(num_classes, kernel_initializer='glorot_normal')(x)
-  model = Model(inputs=inp, outputs=x_out, name='VGG Model')
-  print (model.summary())
-
-  return model
-
-
-def build_model_basic(input_shape, num_classes=54):
+def build_model_basic(input_shape):
   inp = Input(shape=input_shape)
 
   x = conv_act(inp, 24, (3, 3))
@@ -114,14 +92,5 @@ def compile_network(model):
   model.compile(loss='mse', optimizer=optim_adam)
 
 
-if __name__== '__main__':
-  print (keras.__version__)
-  # custom_L1_loss(1, 2)
-
-  datastats = pickle.load(open('datastats.pkl', 'rb'))
-  train_mean = datastats['mean']
-  train_std = datastats['std']
-  pkl_array = pickle.load(open('pose_centroids.pkl', 'rb'))
-  gt_bases = np.reshape(pkl_array, (100, -1))
-  new_bases = (gt_bases - train_mean) / train_std
-  print (gt_bases.shape, gt_bases[1, ], new_bases[1, ])
+if __name__ == '__main__':
+  a = 1

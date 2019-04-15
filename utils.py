@@ -23,6 +23,8 @@ def change_brightness(image, bright_factor):
 
 def opticalFlowDense(image_current, image_next):
     """
+    Borrowed From -> https://github.com/JonathanCMitchell/speedChallenge
+
     input: image_current, image_next (RGB images)
     calculates optical flow magnitude and angle and places it into HSV image
     * Set the saturation to the saturation value of image_next
@@ -78,10 +80,9 @@ def opticalFlowDense(image_current, image_next):
 def provide_shuffle_idx(shape_0, ratio=0.75, data_mode='train'):
     """ Shuffle data and labels.
         Input:
-          data: B,N,... numpy array
-          label: B,... numpy array
+          List of indices
         Return:
-          shuffled data, label and shuffle indices
+          Shuffled Train/Test indices based on requiremets
     """
     np.random.seed(0)
     idx = np.random.choice(shape_0, shape_0, replace=False)

@@ -6,21 +6,18 @@ import os
 import keras
 import cv2
 import time
+
 # Change argument source file based on the dataset
+
 from io_args import args
 from utils import provide_shuffle_idx, opticalFlowDense
 
+
 class DataGenerator(keras.utils.Sequence):
+    def __init__(self, list_ids, batch_size=10, shuffle=True, flag_data='base_depth'):
 
-    def __init__(self, list_ids, batch_size=10, dim=(10, 16, 2),
-                 dim_visual=(10, 16, 565), num_actions=3, shuffle=True, flag_data='base_depth'):
-
-        self.dim = dim
-        pkl_filename = os.path.join('/home/ashar/Documents/comma_ai/speed_challenge_2017/data/train_images',
-                                    'vel_labels.pkl')
+        pkl_filename = args.gt_pkl_filename
         self.labels = pickle.load(open(pkl_filename, 'rb'))
-
-        self.dim_visual = dim_visual
         self.batch_size = batch_size
         self.list_ids = list_ids
         self.shuffle = shuffle
@@ -71,19 +68,12 @@ class DataGenerator(keras.utils.Sequence):
 
           img = cv2.resize(img, (args.input_size2, args.input_size1))
           img2 = cv2.resize(img2, (args.input_size2, args.input_size1))
-
           rgb_flow = opticalFlowDense(img, img2)
-          # print(np.min(rgb_flow), np.max(rgb_flow))
 
           dst = np.zeros(shape=(5, 2))
           rgb_flow = cv2.normalize(rgb_flow, dst, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
           rgb_flow -= 0.5
           rgb_flow *= 2
-          # print(np.min(rgb_flow), np.max(rgb_flow))
-          # cv2.imshow('flow_vis', rgb_flow)
-          # cv2.waitKey(100)
-
-          # print time.time() - aa
 
           X[idx, ] = rgb_flow.astype(np.float32)
           label = self.labels[name_id]
@@ -93,14 +83,10 @@ class DataGenerator(keras.utils.Sequence):
 
 
 if __name__ == '__main__':
-    vid_dir = '/home/ashar/Documents/comma_ai/speed_challenge_2017/data'
+    vid_dir = args.data_root_dir
     train_vid = os.path.join(vid_dir, 'train.mp4')
     train_img_folder = os.path.join(vid_dir, 'train_images')
     img_list = sorted(glob.glob('%s/*.png' % train_img_folder))
-    #
-    # np.random.seed(0)
-    #
-    # train_ids, test_ids = np.random.
 
     train_idx = provide_shuffle_idx(len(img_list), ratio=0.75, data_mode='train')
     test_idx = provide_shuffle_idx(len(img_list), ratio=0.75, data_mode='test')
@@ -109,9 +95,6 @@ if __name__ == '__main__':
 
     # print(len(train_list), len(test_list))
 
-    qwe = DataGenerator(img_list, flag_data='base_depth', batch_size=32)
+    qwe = DataGenerator(img_list, batch_size=32)
     a, b = qwe.__getitem__(0)
     print(a.shape, np.min(a), np.max(a), b.shape, b)
-
-  # img_list = sorted(glob.glob('%s*/images/depthRender/Cam1/*.png' % args.root_dir))
-

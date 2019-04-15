@@ -5,20 +5,7 @@ import pickle
 import numpy as np
 import os
 
-vid_dir = '/home/ashar/Documents/comma_ai/speed_challenge_2017/data'
-
-train_vid = os.path.join(vid_dir, 'train.mp4')
-test_vid = os.path.join(vid_dir, 'test.mp4')
-velocity_file = os.path.join(vid_dir, 'train.txt')
-test_velocity_file = 'test_results.pkl'
-
-train_img_folder = os.path.join(vid_dir, 'train_images')
-test_img_folder = os.path.join(vid_dir, 'test_images')
-
-if not os.path.exists(train_img_folder):
-    os.makedirs(train_img_folder)
-if not os.path.exists(test_img_folder):
-    os.makedirs(test_img_folder)
+from io_args import args
 
 
 def extract_frames(vid_name, vid_folder):
@@ -90,6 +77,21 @@ def plot_train_speeds(file_name):
 
 if __name__ == '__main__':
     a = 1
+
+    vid_dir = args.data_root_dir
+    train_vid = os.path.join(vid_dir, 'train.mp4')
+    test_vid = os.path.join(vid_dir, 'test.mp4')
+    velocity_file = os.path.join(vid_dir, 'train.txt')
+    test_velocity_file = 'test_results.pkl'
+
+    train_img_folder = os.path.join(vid_dir, 'train_images')
+    test_img_folder = os.path.join(vid_dir, 'test_images')
+
+    if not os.path.exists(train_img_folder):
+        os.makedirs(train_img_folder)
+    if not os.path.exists(test_img_folder):
+        os.makedirs(test_img_folder)
+
     # plot_train_speeds(velocity_file)
     # display_cropped_imgs(test_img_folder, velocity_file)
     display_cropped_test(test_img_folder, test_velocity_file)
